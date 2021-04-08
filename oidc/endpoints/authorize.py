@@ -15,8 +15,11 @@ def authorization(pres_req_conf_id: str, request_parameters: dict):
     )
 
     response = aca_client.create_proof_request(presentation_configuration.to_json())
+    print('PROOF RESPONSE', response)
     public_did = aca_client.get_public_did()
+    print('DID', public_did)
     endpoint = aca_client.get_endpoint_url()
+    print('ENDPOINT', endpoint)
 
     presentation_request = PresentationFactory.from_params(
         presentation_request=response.get("presentation_request"),
