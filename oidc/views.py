@@ -217,3 +217,16 @@ async def authorize(request):
                 "pres_req": pres_req,
             },
         )
+
+def demo(request):
+    # return render(request, "demo.html", {'settings': settings})
+
+    template_name = "demo.html"
+
+    return TemplateResponse(
+        request,
+        template_name,
+        {
+            'settings': settings
+        },
+    )
