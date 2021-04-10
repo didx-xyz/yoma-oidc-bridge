@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync, sync_to_async
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
@@ -19,10 +20,16 @@ from oidc.serializers import PresentationConfigurationSerializer
 from rest_framework import permissions
 from django.shortcuts import get_object_or_404
 from oidc.endpoints.token import create_id_token
-from oidc.endpoints.authorize import authorization
+from oidc.endpoints.authorize import authorization, authorization_async
 
 from oidc_provider.lib.endpoints.authorize import AuthorizeEndpoint
 from django.conf import settings
+
+import asyncio
+
+# TODO - remove the two lines below
+from django.contrib.sessions.models import Session
+Session.objects.all().delete()
 
 LOGGER = logging.getLogger(__name__)
 
@@ -154,8 +161,27 @@ def token_endpoint(request):
         data = {"access_token": "invalid", "id_token": token, "token_type": "Bearer"}
         return JsonResponse(data)
 
+@sync_to_async
+def setSession(request, session_id):
+    request.session["sessionid"] = session_id
+    return request
 
-def authorize(request):
+@sync_to_async
+def validatePresentation(request):
+    # TODO Fix code commented below
+    aut = AuthorizeEndpoint(request)
+    try:
+        aut.validate_params()
+    except Exception as e:
+        # return HttpResponseBadRequest(
+        #     f"Error validating parameters: [{e.error}: {e.description}]"
+        # )
+        return HttpResponseBadRequest(
+            f"Error validating parameters: [{e!r}: {e!r}]"
+        )
+
+
+async def authorize(request):
     template_name = "qr_display.html"
 
     if request.method == "GET":
@@ -167,18 +193,16 @@ def authorize(request):
         if not scopes or "vc_authn" not in scopes.split(" "):
             return HttpResponseBadRequest("Scope vc_authn not found")
 
-        aut = AuthorizeEndpoint(request)
-        try:
-            aut.validate_params()
-        except Exception as e:
-            return HttpResponseBadRequest(
-                f"Error validating parameters: [{e.error}: {e.description}]"
-            )
+        await validatePresentation(request)
 
-        short_url, session_id, pres_req, b64_presentation = authorization(
-            pres_req_conf_id, request.GET
-        )
-        request.session["sessionid"] = session_id
+        # short_url, session_id, pres_req, b64_presentation = await asyncio.gather(authorization_async(pres_req_conf_id, request.GET))
+        test = await asyncio.gather(authorization_async(pres_req_conf_id, request.GET))
+
+        print('TEST:', test[0])
+        short_url, session_id, pres_req, b64_presentation = test[0]
+
+        request = await setSession(request, session_id)
+        # request.session["sessionid"] = session_id
 
         return TemplateResponse(
             request,
@@ -190,5 +214,6 @@ def authorize(request):
                 "poll_max_tries": settings.POLL_MAX_TRIES,
                 "poll_url": f"{settings.SITE_URL}/vc/connect/poll?pid={pres_req}",
                 "resolution_url": f"{settings.SITE_URL}/vc/connect/callback?pid={pres_req}",
+                "pres_req": pres_req,
             },
         )
