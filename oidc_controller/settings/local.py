@@ -38,8 +38,29 @@ JWT_TOKEN_ISSUER = SITE_URL
 JWT_KEY_KID = "525786059b724b15b2d23033664342ff"
 
 
+# Running on localhost config
+# ACA_PY_URL = f"http://aca-py:{ACA_PY_ADMIN_PORT}"
+# ACA_PY_TRANSPORT_URL = f"http://aca-py:{ACA_PY_TRANSPORT_PORT}"
+
+# Running with ngrok config
 ACA_PY_URL = f"http://aca-py:{ACA_PY_ADMIN_PORT}"
-# Make sure this is an ngrok endpoint i.e. ngrok http http://localhost:5679
-ACA_PY_TRANSPORT_URL = f"https://2797508e08b6.ngrok.io"
+NGROK_AGENT_URL = os.getenv("NGROK_AGENT_URL")
+ACA_PY_TRANSPORT_URL = NGROK_AGENT_URL
+
 POLL_INTERVAL = 5000
 POLL_MAX_TRIES = 12
+
+
+# Settings for django-oidc-rp
+OIDC_RP_PROVIDER_ENDPOINT = os.getenv("OIDC_RP_PROVIDER_ENDPOINT")
+OIDC_RP_PROVIDER_AUTHORIZATION_ENDPOINT = f"{OIDC_RP_PROVIDER_ENDPOINT}/vc/connect/authorize"
+OIDC_RP_PROVIDER_TOKEN_ENDPOINT = f"{OIDC_RP_PROVIDER_ENDPOINT}/vc/connect/token"
+OIDC_RP_PROVIDER_JWKS_ENDPOINT = f"{OIDC_RP_PROVIDER_ENDPOINT}/.well-known/openid-configuration/jwks"
+OIDC_RP_PROVIDER_USERINFO_ENDPOINT = f"{OIDC_RP_PROVIDER_ENDPOINT}/vc/connect/userinfo"
+OIDC_RP_CLIENT_ID = os.getenv("OIDC_RP_CLIENT_ID")
+OIDC_RP_CLIENT_SECRET = os.getenv("OIDC_RP_CLIENT_SECRET")
+OIDC_RP_PROVIDER_SIGNATURE_ALG = "RS256"
+OIDC_RP_SCOPES = os.getenv("OIDC_RP_SCOPES", "openid profile vc_authn")
+OIDC_RP_ID_TOKEN_INCLUDE_USERINFO = True
+
+VC_AUTHN_PRES_REQ_CONF_ID = os.getenv("VC_AUTHN_PRES_REQ_CONF_ID")

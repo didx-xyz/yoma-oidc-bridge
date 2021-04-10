@@ -29,6 +29,13 @@ You should run the demo in a workstation with direct access from Internet, using
 
  - Start ngrok
 
+Start ngrok tunnels with config file
+
+``
+ ./scripts/start-ngrok.sh
+ ngrok start -config ngrok.yml --all
+``
+
 In one terminal
 ``
  ngrok http 5679
