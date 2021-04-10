@@ -14,5 +14,6 @@ urlpatterns = [
     path("vc/connect/poll", views.poll, name="poll"),
     path("vc/connect/callback", views.callback, name="callback"),
     path("vc/connect/token", views.token_endpoint, name="token_endpoint"),
+    path("vc/demo", views.demo, name="demo_endpoint"),
     path("", views.index, name="Index"),
 ]
