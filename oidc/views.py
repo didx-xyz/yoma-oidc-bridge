@@ -168,7 +168,6 @@ def setSession(request, session_id):
 
 @sync_to_async
 def validatePresentation(request):
-    # TODO Fix code commented below
     aut = AuthorizeEndpoint(request)
     try:
         aut.validate_params()
