@@ -64,3 +64,5 @@ OIDC_RP_SCOPES = os.getenv("OIDC_RP_SCOPES", "openid profile vc_authn")
 OIDC_RP_ID_TOKEN_INCLUDE_USERINFO = True
 
 VC_AUTHN_PRES_REQ_CONF_ID = os.getenv("VC_AUTHN_PRES_REQ_CONF_ID")
+
+AUTH_URL = os.getenv("AUTH_URL")

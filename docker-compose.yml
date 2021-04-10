@@ -20,6 +20,7 @@ services:
       OIDC_RP_SCOPES: ${OIDC_RP_SCOPES}
       VC_AUTHN_PRES_REQ_CONF_ID: ${VC_AUTHN_PRES_REQ_CONF_ID}
       NGROK_AGENT_URL: ${NGROK_AGENT_URL}
+      AUTH_URL: ${AUTH_URL}
     networks:
        - oidc
     ports:
