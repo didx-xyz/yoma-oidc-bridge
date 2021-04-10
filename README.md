@@ -33,21 +33,7 @@ Start ngrok tunnels with config file
 
 ``
  ./scripts/start-ngrok.sh
- ngrok start -config ngrok.yml --all
 ``
-
-In one terminal
-``
- ngrok http 5679
-``
-Copy the HTTP endpoint URL and update the ACA_PY_TRANSPORT_URL variable in oidc_controller/settings/local.py
-
-
-In a second terminal
-``
- ngrok http 5000
-``
-Copy the HTTP endpoint URLs and update the IDENTITY_SERVER_URL and SITE_URL variable in ./manage script
 
  - Start the agent
 
