@@ -7,17 +7,20 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <title>Django OIDC Demo</title>
+    <title>Yoma Django OIDC Demo</title>
   </head>
   <body>
     <div class="jumbotron">
-      <h1 class="display-4">Django OIDC Demo</h1>
+      <h1 class="display-4">Yoma Django OIDC Demo</h1>
+    <img width="400" height="155" src="https://trinsic.id/wp-content/uploads/2020/07/yoma_logo_dark-1024x455.png">
+    <p></p>
       {% if user.is_anonymous %}
       <p class="alert alert-danger" role="alert">You are not authenticated.</p>
       <hr class="my-4">
-      <p>Please authenticate by providing a Verified Email.</p>
+      <p>Please authenticate by providing a Yoma Verified Email Credential.</p>
       {% url 'oidc_auth_request' as login_url %}
-      <a class="btn btn-primary btn-lg"  href="{{ login_url }}?pres_req_conf_id={{ settings.VC_AUTHN_PRES_REQ_CONF_ID }}" role="button">Authenticate</a>
+{#      <a class="btn btn-primary btn-lg"  href="{{ login_url }}/vc/connect/authorize/?pres_req_conf_id={{ settings.VC_AUTHN_PRES_REQ_CONF_ID }}&scope=openid+profile+vc_authn&response_type=code&client_id=531136" role="button">Authenticate</a>#}
+          <a class="btn btn-primary btn-lg"  href="{{ settings.AUTH_URL }}" role="button">Authenticate</a>
       {% else %}
       <p class="alert alert-success" role="alert">Authentication successful!</p>
       <hr class="my-4">
