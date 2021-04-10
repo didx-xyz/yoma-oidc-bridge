@@ -160,6 +160,7 @@ start() {
     NGROK_CONTROLLER_URL_STRIPPED=`echo $NGROK_CONTROLLER_URL | sed 's/https:\/\///g'`
     echo "${NGROK_CONTROLLER_URL}/vc/connect/authorize/?pres_req_conf_id=verified-email&scope=openid+profile+vc_authn&response_type=code&client_id=531136&redirect_uri=https%3A%2F%2F${NGROK_CONTROLLER_URL_STRIPPED}%2Foidc%2Fauth%2Fcb%2F&state=O8ALJmGFm5ByvYMyWhT7vkzdc3dc5Yds&nonce="
 
+    export AUTH_URL="${NGROK_CONTROLLER_URL}/vc/connect/authorize/?pres_req_conf_id=verified-email&scope=openid+profile+vc_authn&response_type=code&client_id=531136&redirect_uri=https%3A%2F%2F${NGROK_CONTROLLER_URL_STRIPPED}%2Foidc%2Fauth%2Fcb%2F&state=O8ALJmGFm5ByvYMyWhT7vkzdc3dc5Yds&nonce="
     docker-compose build
     docker-compose -p ${COMPOSE_PROJECT_NAME} up -d
     docker-compose logs -f
