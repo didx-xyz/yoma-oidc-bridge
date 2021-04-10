@@ -13,13 +13,14 @@ def authorization(pres_req_conf_id: str, request_parameters: dict):
     presentation_configuration = PresentationConfigurations.objects.get(
         id=pres_req_conf_id
     )
+    print('PRESENTATION CONFIG ', presentation_configuration)
 
     response = aca_client.create_proof_request(presentation_configuration.to_json())
-    print('PROOF RESPONSE', response)
+    print('PROOF CREATE ', response)
     public_did = aca_client.get_public_did()
-    print('DID', public_did)
+    print('DID ', public_did)
     endpoint = aca_client.get_endpoint_url()
-    print('ENDPOINT', endpoint)
+    print('ENDPOINT ', endpoint)
 
     presentation_request = PresentationFactory.from_params(
         presentation_request=response.get("presentation_request"),
@@ -27,6 +28,8 @@ def authorization(pres_req_conf_id: str, request_parameters: dict):
         verkey=[public_did.get("verkey")],
         endpoint=endpoint,
     ).to_json()
+
+    print('PROOF REQUEST ', presentation_request)
 
     presentation_request_id = response["presentation_exchange_id"]
     session = AuthSession.objects.create(
@@ -36,8 +39,15 @@ def authorization(pres_req_conf_id: str, request_parameters: dict):
         request_parameters=request_parameters,
         expired_timestamp=timezone.now() + timedelta(minutes=60),
     )
+    print('SESSION ', session)
     url, b64_presentation = create_short_url(presentation_request)
     mapped_url = MappedUrl.objects.create(url=url, session=session)
     short_url = mapped_url.get_short_url()
+
+    print('sessionpk: ', str(session.pk))
+    print('mapped_url: ', mapped_url)
+    print('short_url: ', short_url)
+    print('presx_id: ', presentation_request_id)
+    print('b64 presx: ', b64_presentation)
 
     return short_url, str(session.pk), presentation_request_id, b64_presentation
